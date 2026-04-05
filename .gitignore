@@ -1,0 +1,80 @@
+### THISOE IGNORES
+
+# IDE and GIT
+.vscode/
+
+
+
+
+
+### STM32CubeIDE IGNORES
+
+
+# =========================
+# Build output
+# =========================
+/Debug/
+/Release/
+/build/
+/out/
+
+# Object / binary files
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.srec
+
+# Linker output / intermediate
+*.su
+*.cyclo
+*.log
+
+# =========================
+# STM32CubeIDE / Eclipse
+# =========================
+.metadata/
+.settings/
+*.launch
+
+# Eclipse project files
+# .project
+# .cproject
+
+# =========================
+# Generated code (optional)
+# =========================
+# auto-generated HAL code
+# Core/Src/*
+# Core/Inc/*
+# Drivers/*
+
+# =========================
+# Toolchain files
+# =========================
+*.stackdump
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Backup / temp
+# =========================
+*~
+*.bak
+*.tmp
+*.swp
+
+*.log
+
+# =========================
+# CubeMX
+# =========================
+# Keep the .ioc file (important!)
+# *.ioc   <-- DO NOT IGNORE THIS
