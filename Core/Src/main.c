@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "thisoe.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,7 +49,7 @@
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 /* USER CODE BEGIN PFP */
-void alarm_sound(void);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -96,7 +96,13 @@ int main(void)
   {
 
 
-	  alarm_sound();
+    // alarm_sound();
+
+
+    led(rmulti()||rmin());
+    buz(rmulti()||rsec());
+
+    HAL_Delay(39);
 
 
 
@@ -179,10 +185,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED_D2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : BTN_S2_Pin BTN_MULTI_Pin BTN_MIN_Pin BTN_SEC_Pin */
-  GPIO_InitStruct.Pin = BTN_S2_Pin|BTN_MULTI_Pin|BTN_MIN_Pin|BTN_SEC_Pin;
+  /*Configure GPIO pin : BTN_S2_Pin */
+  GPIO_InitStruct.Pin = BTN_S2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(BTN_S2_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : BTN_MULTI_Pin BTN_MIN_Pin BTN_SEC_Pin */
+  GPIO_InitStruct.Pin = BTN_MULTI_Pin|BTN_MIN_Pin|BTN_SEC_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BUZ_Pin */
@@ -205,23 +217,6 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-void alarm_sound(void)
-{
-  for(int i = 0; i < 4; i++)
-  {
-    HAL_GPIO_WritePin(GPIOA, BUZ_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(LED_D2_GPIO_Port, LED_D2_Pin, 0);
-    HAL_Delay(70);
-    HAL_GPIO_WritePin(GPIOA, BUZ_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(LED_D2_GPIO_Port, LED_D2_Pin, 1);
-    HAL_Delay(70);
-  }
-  HAL_Delay(700);
-}
-
-
-
 
 
 

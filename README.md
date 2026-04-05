@@ -23,9 +23,9 @@ As a C-lang driven MCU beginner, I think this project is a good starter. <br>
 |-----------|--------|-----------|-------|
 | TM1637    | CLK    | PB6       | Output (bit-bang) |
 | TM1637    | DIO    | PB7       | Output (open-drain) |
-| BTN_MULTI | OUT    | PA1       | Input, pull-up, active LOW |
-| BTN_MIN   | OUT    | PA2       | Input, pull-up, active LOW |
-| BTN_SEC   | OUT    | PA3       | Input, pull-up, active LOW |
+| BTN_MULTI | OUT    | PA1       | Input, pull-down, active LOW |
+| BTN_MIN   | OUT    | PA2       | Input, pull-down, active LOW |
+| BTN_SEC   | OUT    | PA3       | Input, pull-down, active LOW |
 | TMB12A05  | S      | PA8       | Output (active HIGH) |
 
 ### Debugging pins within MCU:
@@ -93,6 +93,16 @@ alarm_sound();
 ```
 
 
-### Buttons debounce & test
+### Buttons debugging
+
+I got only 2 buttons but I have a 3-pin switch (that have 2 states: A-B & B-C).
+
+So I have to make `BTN_MIN` and `BTN_SEC` Pull-down,
+so that when floating they won't output as HIGH.
+
+
+### Try out a `TM1637` driver lib
+
+[TODO](https://github.com/nimaltd/tm1637)
 
 
