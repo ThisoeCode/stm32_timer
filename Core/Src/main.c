@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "tm1637.h"
 #include "thisoe.h"
 /* USER CODE END Includes */
 
@@ -42,6 +43,17 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
+tm1637_t tm = {
+  .gpio_clk = TM_CLK_GPIO_Port,
+  .gpio_dat = TM_DIO_GPIO_Port,
+  .pin_clk = TM_CLK_Pin,
+  .pin_dat = TM_DIO_Pin,
+  .seg_cnt = 4,
+};
+
+uint8_t m = 0;
+uint8_t s = 0;
 
 /* USER CODE END PV */
 
@@ -88,6 +100,10 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
+  tm1637_init(&tm);
+  tm1637_brightness(&tm,7);
+  tm1637_str(&tm," HI ");
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -101,6 +117,9 @@ int main(void)
 
     led(rmulti()||rmin());
     buz(rmulti()||rsec());
+
+    tm1637_printf(&tm,"%d%d",m,s);
+    countup(&m,&s);
 
     HAL_Delay(39);
 

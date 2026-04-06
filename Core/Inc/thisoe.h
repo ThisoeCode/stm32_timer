@@ -32,4 +32,9 @@ void ondown();
 void onup();
 
 
+// ======= LIB =======
+void countdown(uint8_t *min, uint8_t *sec);
+void countup(uint8_t *min, uint8_t *sec);
+
+
 #endif
