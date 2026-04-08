@@ -13,14 +13,11 @@ GPIO_PinState rsec(void){
   return HAL_GPIO_ReadPin(BTN,Bsec);
 }
 
-void debounce(void){
+// void debounce(void){
+// }
 
-}
+// void ondown(){
+// }
 
-void ondown(){
-
-}
-
-void onup(){
-
-}
+// void onup(){
+// }

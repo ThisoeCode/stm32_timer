@@ -1,9 +1,12 @@
 #ifndef THISOE_LIB
 #define THISOE_LIB
 
-// imports & defines
+#define bool _Bool
+
+// imports & defines //
 #include "stm32f1xx_hal.h"
 #include "main.h"
+#include "tm1637.h"
 
 #define BTN GPIOA
 #define Bmulti BTN_MULTI_Pin
@@ -11,30 +14,39 @@
 #define Bsec BTN_SEC_Pin
 
 
-// ======= MCU =======
+// ======= MCU ======= //
 void delay(uint32_t);
-void led(_Bool);
+void led(bool);
 
 
-// ======= BUZZER =======
-void buz(_Bool);
+// ======= BUZZER ======= //
+void buz(bool);
 
 void alarm_sound(void);
 
 
-// ======= BUTTON =======
+// ======= BUTTON ======= //
 GPIO_PinState rmulti(void);
 GPIO_PinState rmin(void);
 GPIO_PinState rsec(void);
 
-void debounce(void);
-void ondown();
-void onup();
+// void debounce(void);
+// void ondown(void);
+// void onup(void);
 
 
-// ======= LIB =======
-void countdown(uint8_t *min, uint8_t *sec);
-void countup(uint8_t *min, uint8_t *sec);
+// ======= TM1637 ======= //
+bool settime(bool colonstat);
+/**
+ * @brief If time is up, return `0xf`.
+ */
+uint8_t countdown(void);
+bool countup(void);
+
+
+// ======= TIMER CORE ======= //
+
+
 
 
 #endif

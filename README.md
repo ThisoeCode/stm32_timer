@@ -106,3 +106,10 @@ so that when floating they won't output as HIGH.
 [TODO](https://github.com/nimaltd/tm1637)
 
 
+
+# Error Codes
+
+Example: `Err0`
+
+## Err1
+The pointer (often `min`(`m`), `sec`(`s`) or `seg`(`TM`)) does not exist.

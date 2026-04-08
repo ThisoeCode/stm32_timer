@@ -1,6 +1,6 @@
 #include "thisoe.h"
 
-void buz(_Bool stat){
+void buz(bool stat){
   HAL_GPIO_WritePin(GPIOA, BUZ_Pin, stat);
 }
 

@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "tm1637.h"
+#include "flag.h"
 #include "thisoe.h"
 /* USER CODE END Includes */
 
@@ -44,7 +45,7 @@
 
 /* USER CODE BEGIN PV */
 
-tm1637_t tm = {
+tm1637_t seg = {
   .gpio_clk = TM_CLK_GPIO_Port,
   .gpio_dat = TM_DIO_GPIO_Port,
   .pin_clk = TM_CLK_Pin,
@@ -52,8 +53,7 @@ tm1637_t tm = {
   .seg_cnt = 4,
 };
 
-uint8_t m = 0;
-uint8_t s = 0;
+tm1637_t *TM = &seg;
 
 /* USER CODE END PV */
 
@@ -100,9 +100,17 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
-  tm1637_init(&tm);
-  tm1637_brightness(&tm,7);
-  tm1637_str(&tm," HI ");
+  // default-seg, min, sec
+  bind_state(TM,0,0);
+
+  tm1637_init(TM);
+  tm1637_brightness(TM,7);
+  tm1637_str(TM," HI ");
+  HAL_Delay(2333);
+  tm1637_str(TM,"    ");
+  HAL_Delay(999);
+//  tm1637_str(TM,"0000");
+
 
   /* USER CODE END 2 */
 
@@ -118,8 +126,16 @@ int main(void)
     led(rmulti()||rmin());
     buz(rmulti()||rsec());
 
-    tm1637_printf(&tm,"%d%d",m,s);
-    countup(&m,&s);
+
+    test_TM();
+
+    // if(m%2==0){
+    //   colon(1);tm_update(TM);
+    // }
+    // else{
+    //   colon(0);tm_update(TM);
+    // }
+
 
     HAL_Delay(39);
 
@@ -237,7 +253,14 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-
+void test_TM(){
+  *GS.m=12; *GS.s=8;
+  settime(1);
+  HAL_Delay(999);
+  *GS.m=5; *GS.s=39;
+  settime(0);
+  HAL_Delay(900);
+}
 
 /* USER CODE END 4 */
 
