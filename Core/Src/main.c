@@ -127,7 +127,12 @@ int main(void)
     buz(rmulti()||rsec());
 
 
-    test_TM();
+    GS.m=12; GS.s=8;
+    settime(1);
+    HAL_Delay(999);
+    GS.m=5; GS.s=39;
+    settime(0);
+    HAL_Delay(900);
 
     // if(m%2==0){
     //   colon(1);tm_update(TM);
@@ -253,14 +258,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-void test_TM(){
-  *GS.m=12; *GS.s=8;
-  settime(1);
-  HAL_Delay(999);
-  *GS.m=5; *GS.s=39;
-  settime(0);
-  HAL_Delay(900);
-}
+
 
 /* USER CODE END 4 */
 

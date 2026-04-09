@@ -31,9 +31,13 @@ const uint8_t seg_map[11] = {
 };
 
 bool settime(bool colonstat){
-  uint8_t min = *(GS.m);
-  uint8_t sec = *(GS.s);
+  uint8_t min = GS.m;
+  uint8_t sec = GS.s;
 
+
+  /**
+   * @todo delete bug report on tm1637 before production
+   */
   if(!GS.m || !GS.s){
     tm1637_str(GS.TM,"ERR1");
     return 1;

@@ -13,8 +13,8 @@ extern Flag gFlag;
 
 typedef struct{
   tm1637_t *TM;
-  uint8_t *m;
-  uint8_t *s;
+  uint8_t m;
+  uint8_t s;
 } State;
 
 /**
