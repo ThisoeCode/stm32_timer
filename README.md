@@ -103,13 +103,110 @@ so that when floating they won't output as HIGH.
 
 ### Try out a `TM1637` driver lib
 
-[TODO](https://github.com/nimaltd/tm1637)
+[`nimaltd/tm1637`](https://github.com/nimaltd/tm1637)
+
+> ChatGPT provided me the `seg_map` as follow:
+> ```c
+> static const uint8_t seg_map[11] = {
+>   0x3F,//0
+>   0x06,//1
+>   0x5B,//2
+>   0x4F,//3
+>   0x66,//4
+>   0x6D,//5
+>   0x7D,//6
+>   0x07,//7
+>   0x7F,//8
+>   0x6F,//9
+> };
+> ```
+> so that I can control the board seg-precisely,
+> with `tm1637_raw()`from nimaltd's driver.
+
+I added a `flag.c` to share the current `min` and `sec` state across files.
+Also prepared a place for flags in future coding of the core logic.
 
 
 
-# Error Codes
+### Prepare for `__WFI()`
 
-Example: `Err0`
+I want a pure interrupt-driven firmware.
 
-## Err1
-The pointer (often `min`(`m`), `sec`(`s`) or `seg`(`TM`)) does not exist.
+To do this,
+**add `__WFI();` inside the main while loop**.
+
+Now the `HAL_Delay()` will ruin the timer's normal functionality,
+so get rid of them all with their related logics from now on.
+
+
+
+### Clock configuration
+
+Since there is a 8 MHz crystal on board, let's use it.
+
+- Setup HSE
+
+In `.ioc` > `Pinout Config` > `System Core` > `RCC`, find `High Speed Clock` and select `Crystal/Ceramic Resonator`.
+
+Then in `Clock Config`:
+
+| Setting    | Value  |
+| ---------- | ------ |
+| HSE Input  | 8 MHz  |
+| PLL Source | HSE    |
+| PLLMul     | x9     |
+| System Clock Mux | PLLCLK  |
+| SYSCLK     | 72 MHz |
+| HCLK       | 72 MHz |
+| APB1       | / 2 (resulting 36 MHz) |
+
+- Setup `TIM2`
+
+In `Pinout Config` > `Timers` > `TIM2` > `Mode`
+find `Clock Source` and select `Internal Clock`.
+
+`Configuration` contents will appear.
+Under `NVIC Settings`, enable `TIM2 global interrupt`.
+
+Then in `Parameter Settings`:
+| Param                | Value  |
+| -------------------- | ------ |
+| Prescaler (PSC)      | 7200-1 |
+| Counter Period (ARR) | 5000-1 |
+| Counter Mode         | Up     |
+
+> **Explain of the value:**
+> 
+> The goal is to interrupt every 0.5 seconds.<br>
+> The formula:
+> ```c
+> f_update = TIM_CLK / ((PSC + 1) * (ARR + 1))
+> ```
+> For TIM2, `TIM_CLK` is 72 MHz;<br>
+> - Prescaler = `7200 - 1`
+> - Period = `5000 - 1`
+> Result:
+> - 72 MHz / 7200 = 10 kHz
+> - 10 kHz / 5000 = 2 Hz
+
+Save `.ioc` and generate code.
+
+Now test the timer interrupt.<br>
+In `/* USER CODE BEGIN 4 */`:
+```c
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if(htim->Instance==TIM2){
+    // Callback when interrupt triggered every 0.5 sec
+  }
+}
+```
+> ChatGPT warns that we should keep ISR (Interrupt Service Routine of the timer) logic short.
+> 
+> So we better only toggle a flag in the ISR callback, and do heavy work with the flag inside the main while loop.
+
+
+
+### Button interruption
+
+> TODO

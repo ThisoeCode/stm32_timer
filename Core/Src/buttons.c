@@ -1,23 +1,21 @@
 #include "thisoe.h"
 
 
-GPIO_PinState rmulti(void){
+
+// ======= TEST ======= //
+
+GPIO_PinState r_multi(void){
   return HAL_GPIO_ReadPin(BTN,Bmulti);
 }
-
-GPIO_PinState rmin(void){
+GPIO_PinState r_min(void){
   return HAL_GPIO_ReadPin(BTN,Bmin);
 }
-
-GPIO_PinState rsec(void){
+GPIO_PinState r_sec(void){
   return HAL_GPIO_ReadPin(BTN,Bsec);
 }
 
-// void debounce(void){
-// }
 
-// void ondown(){
-// }
 
-// void onup(){
-// }
+// ======= BUTTONS ======= //
+
+

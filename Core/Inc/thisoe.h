@@ -26,9 +26,9 @@ void alarm_sound(void);
 
 
 // ======= BUTTON ======= //
-GPIO_PinState rmulti(void);
-GPIO_PinState rmin(void);
-GPIO_PinState rsec(void);
+GPIO_PinState r_multi(void);
+GPIO_PinState r_min(void);
+GPIO_PinState r_sec(void);
 
 // void debounce(void);
 // void ondown(void);
@@ -36,17 +36,17 @@ GPIO_PinState rsec(void);
 
 
 // ======= TM1637 ======= //
-bool settime(bool colonstat);
+void settime(bool colonstat);
 /**
- * @brief If time is up, return `0xf`.
+ * @returns - Returns `1` when time is up.
  */
-uint8_t countdown(void);
-bool countup(void);
+bool countdown(void);
+void countup(void);
 
 
-// ======= TIMER CORE ======= //
+// ======= TIMER WFI CORE ======= //
 
-
+void thisoe_timer(void);
 
 
 #endif

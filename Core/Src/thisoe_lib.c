@@ -17,7 +17,7 @@ void led(bool stat){
 
 // ======= TM1637 ======= //
 
-const uint8_t seg_map[11] = {
+static const uint8_t seg_map[11] = {
   0x3F,//0
   0x06,//1
   0x5B,//2
@@ -30,22 +30,9 @@ const uint8_t seg_map[11] = {
   0x6F,//9
 };
 
-bool settime(bool colonstat){
+void settime(bool colonstat){
   uint8_t min = GS.m;
   uint8_t sec = GS.s;
-
-
-  /**
-   * @todo delete bug report on tm1637 before production
-   */
-  if(!GS.m || !GS.s){
-    tm1637_str(GS.TM,"ERR1");
-    return 1;
-  }
-  if(GS.m>99 || GS.s>59){
-    tm1637_str(GS.TM,"ERR2");
-    return 1;
-  }
 
   uint8_t buf[4];
 
@@ -66,10 +53,9 @@ bool settime(bool colonstat){
   else buf[1] &= ~0x80;
 
   tm1637_raw(GS.TM,buf);
-  return 0;
 }
 
-uint8_t countdown(){
+bool countdown(){
   if(GS.s > 0)
     (GS.s)--;
   else{
@@ -77,17 +63,16 @@ uint8_t countdown(){
       (GS.m)--;
       GS.s = 59;
     }else{ // 00:00
-      return 0xf;
+      return 1;
     }
   }
   return 0;
 }
 
-bool countup(){
+void countup(){
   if(GS.m == 99 && GS.s == 59){
     GS.m = 0;
     GS.s = 0;
-    return 0;
   }
   // carry SEC
   if(GS.s < 59)
@@ -100,5 +85,4 @@ bool countup(){
     else
       GS.m = 0;
   }
-  return 0;
 }
