@@ -26,7 +26,7 @@ void alarm_sound(void);
 
 
 // ======= BUTTON ======= //
-GPIO_PinState r_multi(void);
+GPIO_PinState r_mul(void);
 GPIO_PinState r_min(void);
 GPIO_PinState r_sec(void);
 
@@ -46,7 +46,17 @@ void countup(void);
 
 // ======= TIMER WFI CORE ======= //
 
+/** 
+ * @brief Core logic impl
+ */
 void thisoe_timer(void);
-
+/** 
+ * @brief EXTI handler of MULTI btn
+ */
+void thisoe_toggle(void);
+/** 
+ * @brief EXTI handler of MIN/SEC btn
+ */
+void thisoe_addtime(bool isMin);
 
 #endif

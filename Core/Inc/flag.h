@@ -5,11 +5,12 @@
 
 
 typedef struct{
+  volatile bool led;
   volatile bool tim2;
   volatile bool colon;
-  volatile bool countingDown;
   volatile bool countingUp;
-  volatile bool listeningCombo;
+  volatile bool countingDown;
+  volatile bool timeUp;
 } Flag;
 
 typedef struct{
@@ -17,6 +18,14 @@ typedef struct{
   volatile uint8_t m;
   volatile uint8_t s;
 } State;
+
+typedef struct{
+  const uint8_t id;
+  volatile uint32_t useTick;
+  volatile bool exti;
+  // volatile bool isActive;
+  // volatile bool isBouncing;
+} ButtonState;
 
 
 /**
@@ -28,6 +37,13 @@ extern Flag GF;
  * @brief Global State
  */
 extern State GS;
+
+/**
+ * @brief Global State
+ */
+extern ButtonState B_MULTI;
+extern ButtonState B_MIN;
+extern ButtonState B_SEC;
 
 
 void bind_state(tm1637_t *seg, uint8_t min, uint8_t sec);

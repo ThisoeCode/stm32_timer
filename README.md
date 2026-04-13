@@ -6,9 +6,9 @@ As a C-lang driven MCU beginner, I think this project is a good starter. <br>
 
 
 ## Hardware Preparation
-- An `STM32F103C8T6` board
-- An `ST-LINK/V2` in-circuit debugger
-- A `TM1637` 4-digits 7-seg number display
+- An `STM32F103C8T6`
+- An `ST-LINK/V2` ICD (in-circuit debugger)
+- A `TM1637` 4-digits 7-seg number display with a colon
 - A `TMB12A05` buzzer
 - Some un-debounced buttons
 - Some breadboards and wires
@@ -30,7 +30,7 @@ As a C-lang driven MCU beginner, I think this project is a good starter. <br>
 
 ### Debugging pins within MCU:
 
-> `.ioc` GUI > Pinout & Config > System Core > `SYS` > Debug:
+> `.ioc` GUI > `Pinout & Config` > `System Core` > `SYS` > Debug:
 > Select `Serial Wire`
 
 | Component  | STM32 Pin | Notes |
@@ -191,22 +191,83 @@ Then in `Parameter Settings`:
 
 Save `.ioc` and generate code.
 
+- Test TIM ISR (Interrupt Service Routine)
+
 Now test the timer interrupt.<br>
 In `/* USER CODE BEGIN 4 */`:
 ```c
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
   if(htim->Instance==TIM2){
     // Callback when interrupt triggered every 0.5 sec
   }
 }
 ```
-> ChatGPT warns that we should keep ISR (Interrupt Service Routine of the timer) logic short.
+> ChatGPT warns that we should keep ISR logic short.
 > 
-> So we better only toggle a flag in the ISR callback, and do heavy work with the flag inside the main while loop.
+> So we better only set a flag in the ISR callback,
+> and move heavy work into the main while loop.
+> ```c
+> while(1){
+>   if(flag){
+>     flag = 0;
+>     // handling logic...
+>   }
+> 
+>   __WFI();
+> }
+> ```
 
 
 
 ### Button interruption
 
-> TODO
+EXTI (External Interrupt) is an ISR from a GPIO input.
+
+1. Re-configure Pins
+
+In `.ioc` > `Pinout & Config` > `Pinout view`,
+set the 3 button's pins as `GPIO_EXTIn`.
+
+Then go to `Pinout & Config` > `System Core` > `GPIO` and set:
+| Setting | Value |
+| ------- | ----- |
+| GPIO mode | External Interrupt Mode with Rising edge trigger |
+| GPIO Pull | Pull-up |
+| User Label     | `BTN_MULTI_Pin_Pin`/`BTN_MIN_Pin_Pin`/`BTN_SEC_Pin_Pin` |
+
+2. Enable NVIC (Nested Vectored Interrupt Controller)
+
+In `Pinout & Config` > `System Core` > `NVIC`,
+check the interrupt of EXTI 1, 2, and 3.
+
+Save `.ioc`.
+
+3. ISR callback function
+
+In `/* USER CODE BEGIN 4 */`:
+```c
+void HAL_GPIO_EXTI_Callback(uint16_t Pin){
+  if(pin==BTN_MULTI_Pin){
+    B_MULTI.exti = 1;
+  }
+  // ...
+}
+```
+
+Then in main while loop, make a test that toggles led on button press:
+```c
+// test
+if(B_MULTI.exti){
+  handle();
+}
+
+void handle(){
+  // debounce
+  if(HAL_GetTick() - BS->useTick < DEBOUNCE_MS) return;
+
+  BS->exti = 0;
+
+  GF.led ^= 1;
+  led(GF.led);
+}
+```

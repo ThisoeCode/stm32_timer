@@ -1,10 +1,8 @@
 #include "thisoe.h"
 
-
-
 // ======= TEST ======= //
 
-GPIO_PinState r_multi(void){
+GPIO_PinState r_mul(void){
   return HAL_GPIO_ReadPin(BTN,Bmulti);
 }
 GPIO_PinState r_min(void){
@@ -13,9 +11,3 @@ GPIO_PinState r_min(void){
 GPIO_PinState r_sec(void){
   return HAL_GPIO_ReadPin(BTN,Bsec);
 }
-
-
-
-// ======= BUTTONS ======= //
-
-

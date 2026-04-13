@@ -2,6 +2,9 @@
 
 Flag GF = {0};
 State GS = {0};
+ButtonState B_MULTI = {.id=1u};
+ButtonState B_MIN = {.id=2u};
+ButtonState B_SEC = {.id=3u};
 
 void bind_state(tm1637_t *seg, uint8_t min, uint8_t sec){
   GS.TM = seg;
@@ -9,9 +12,15 @@ void bind_state(tm1637_t *seg, uint8_t min, uint8_t sec){
   GS.s = sec;
 
   // init flags
+  GF.led = 0;
   GF.tim2 = 0;
   GF.colon = 1u;
   GF.countingDown = 0;
   GF.countingUp = 0;
-  GF.listeningCombo = 0;
+  GF.timeUp = 0;
+}
+
+void bind_btn(ButtonState *BS){
+  BS->exti = 0;
+  BS->useTick = 0;
 }
