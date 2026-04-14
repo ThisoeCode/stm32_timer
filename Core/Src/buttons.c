@@ -1,8 +1,8 @@
 #include "thisoe.h"
 
-// ======= TEST ======= //
+// ======= TEST (unusable for EXTI buttons) ======= //
 
-GPIO_PinState r_mul(void){
+GPIO_PinState r_multi(void){
   return HAL_GPIO_ReadPin(BTN,Bmulti);
 }
 GPIO_PinState r_min(void){

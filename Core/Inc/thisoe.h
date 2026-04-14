@@ -13,6 +13,8 @@
 #define Bmin BTN_MIN_Pin
 #define Bsec BTN_SEC_Pin
 
+#define DEBOUNCE_MS 39U
+
 
 // ======= MCU ======= //
 void delay(uint32_t);
@@ -25,8 +27,8 @@ void buz(bool);
 void alarm_sound(void);
 
 
-// ======= BUTTON ======= //
-GPIO_PinState r_mul(void);
+// ======= GPIO_INPUT BUTTONS TEST (unusable for EXTI buttons) ======= //
+GPIO_PinState r_multi(void);
 GPIO_PinState r_min(void);
 GPIO_PinState r_sec(void);
 
@@ -53,7 +55,7 @@ void thisoe_timer(void);
 /** 
  * @brief EXTI handler of MULTI btn
  */
-void thisoe_toggle(void);
+void thisoe_startstop(void);
 /** 
  * @brief EXTI handler of MIN/SEC btn
  */

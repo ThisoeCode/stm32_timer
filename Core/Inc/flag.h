@@ -23,8 +23,7 @@ typedef struct{
   const uint8_t id;
   volatile uint32_t useTick;
   volatile bool exti;
-  // volatile bool isActive;
-  // volatile bool isBouncing;
+  volatile bool isActive;
 } ButtonState;
 
 

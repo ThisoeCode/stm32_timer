@@ -145,8 +145,8 @@ int main(void)
 
 
     // // TESTS 1
-    // led(r_mul()||r_min());
-    // buz(r_mul()||r_sec());
+    // led(r_multi()||r_min());
+    // buz(r_multi()||r_sec());
     // countup();
     // settime(1);
     // HAL_Delay(500);
@@ -293,7 +293,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : BTN_MULTI_Pin BTN_MIN_Pin BTN_SEC_Pin */
   GPIO_InitStruct.Pin = BTN_MULTI_Pin|BTN_MIN_Pin|BTN_SEC_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : BUZ_Pin */
@@ -340,7 +340,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 // EXTI ISR
 
 void HAL_GPIO_EXTI_Callback(uint16_t pin){
-  if(pin==BTN_MULTI_Pin) thisoe_toggle();
+  if(pin==BTN_MULTI_Pin) thisoe_startstop();
   if(pin==BTN_MIN_Pin) thisoe_addtime(1);
   if(pin==BTN_SEC_Pin) thisoe_addtime(0);
 }

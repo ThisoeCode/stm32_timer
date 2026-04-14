@@ -23,4 +23,5 @@ void bind_state(tm1637_t *seg, uint8_t min, uint8_t sec){
 void bind_btn(ButtonState *BS){
   BS->exti = 0;
   BS->useTick = 0;
+  BS->isActive = 0;
 }

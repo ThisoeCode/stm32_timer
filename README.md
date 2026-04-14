@@ -219,7 +219,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 
 
-### Button interruption
+### Button interruption: Setup EXTI
 
 EXTI (External Interrupt) is an ISR from a GPIO input.
 
@@ -269,5 +269,47 @@ void handle(){
 
   GF.led ^= 1;
   led(GF.led);
+
 }
 ```
+
+
+# Button debouncing
+
+Buttons, physically, are often 2 pieces of thin metal touching.
+The pressing of the button usually creates one or several bounces of those metals under few milliseconds,
+which may trigger the EXTI Rising-edge event more than twice with only one button press.
+
+We can fix this just with a few lines of code.
+
+- Begin a 39 ms timer (`DEBOUNCE_MS`) at the first Rising-edge.
+
+    Inside `HAL_GPIO_EXTI_Callback`:
+    ```c
+    // exti (External Interrupt) Service Routine
+    static void eisr(ButtonState *BS){
+      if(!BS->exti){
+        BS->useTick = HAL_GetTick();
+        BS->exti = 1;
+      }
+    }
+    ```
+    > The `BS->exti` is a "pending" flag, 
+    > leaving heavy mission to the main while loop.
+
+- In the main loop's `handle_btn()`:
+    - Take a break during debouncing. 
+      ```c
+        if((HAL_GetTick() - BS->useTick) < DEBOUNCE_MS) return;
+        BS->exti = 0;
+      ```
+    - When button still pressed after 39 ms, proceed working the button ought to.
+      ```c
+        bool debounced_optmz = (read_btn(BS) == GPIO_PIN_SET);
+        if(debounced_optmz){
+          GF.led ^= 1;
+          led(GF.led);
+          countup();
+          settime(1);
+        }
+      ```

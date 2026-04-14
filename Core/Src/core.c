@@ -29,20 +29,41 @@ static void next_tick(){
 
 
 // ======= BUTTONS ======= //
-#define DEBOUNCE_MS 39
 
-static void btn(ButtonState *BS){
+static GPIO_PinState read_btn(const ButtonState *BS){
+  switch (BS->id){
+    case 1u: return HAL_GPIO_ReadPin(BTN_MULTI_GPIO_Port, BTN_MULTI_Pin);
+    case 2u: return HAL_GPIO_ReadPin(BTN_MIN_GPIO_Port,   BTN_MIN_Pin);
+    case 3u: return HAL_GPIO_ReadPin(BTN_SEC_GPIO_Port,   BTN_SEC_Pin);
+    default: return GPIO_PIN_SET; // safe default
+  }
+}
+
+static void handle_btn(ButtonState *BS){
+  if(!BS->exti) return;
+
   // debounce
-  if(HAL_GetTick() - BS->useTick < DEBOUNCE_MS) return;
+  if((HAL_GetTick() - BS->useTick) < DEBOUNCE_MS) return;
   BS->exti = 0;
+  // bool nowActive = (read_btn(BS) == GPIO_PIN_RESET);
+  // bool wasActive = BS->isActive;
+  // BS->isActive = nowActive;
+  // bool debounced = wasActive && !nowActive;
 
-  // TODO delete test:
-  GF.led ^= 1;
-  led(GF.led);
+  bool debounced_optmz = (read_btn(BS) == GPIO_PIN_SET);
+  if(debounced_optmz){
+    GF.led ^= 1;
+    led(GF.led);
+    countup();
+    settime(1);
+  }
+
+  // BS->isActive = !debounced;
+
 
   // switch(BS.id){
   // case 1u:
-  //   BS.
+  //   /* code */
   //   break;
 
   // case 2u:
@@ -59,8 +80,7 @@ static void btn(ButtonState *BS){
 }
 
 //static void combo(){
-//  GS.m = 0;
-//  GS.s = 0;
+  // TODO
 //}
 
 /**
@@ -77,17 +97,20 @@ static void eisr(ButtonState *BS){
 
 // ======= MAIN ======= //
 
+/** 
+ * @brief main while loop
+ */
 void thisoe_timer(){
   // TIM
   if(GF.tim2) next_tick();
 
   // EXTI
-  if(B_MULTI.exti) btn(&B_MULTI);
-  if(B_MIN.exti) btn(&B_MIN);
-  if(B_SEC.exti) btn(&B_SEC);
+  if(B_MULTI.exti) handle_btn(&B_MULTI);
+  if(B_MIN.exti) handle_btn(&B_MIN);
+  if(B_SEC.exti) handle_btn(&B_SEC);
 }
 
-void thisoe_toggle(){
+void thisoe_startstop(){
   eisr(&B_MULTI);
 }
 
