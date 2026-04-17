@@ -5,9 +5,9 @@
 
 // ======= TIMER ======= //
 static void timeup(){
-  settime(1);
+  settime(1u);
   GF.countingDown = 0;
-  GF.timeUp = 1;
+  GF.timeUp = 1u;
 }
 
 static void next_tick(){
@@ -45,7 +45,6 @@ static void handle_btn(ButtonState *BS){
 
   /*** debounce ***/
   if((HAL_GetTick() - BS->useTick) < DEBOUNCE_MS) return;
-  BS->exti = 0;
   // bool nowActive = (read_btn(BS) == GPIO_PIN_RESET);
   // bool wasActive = BS->isActive;
   // BS->isActive = nowActive;
@@ -53,6 +52,7 @@ static void handle_btn(ButtonState *BS){
 
   bool level = (read_btn(BS) == GPIO_PIN_SET);
   if(!level) return;
+  BS->exti = 0;
 
   /*** MAIN HANDLE ***/
   if(GF.timeUp){
@@ -75,7 +75,7 @@ static void handle_btn(ButtonState *BS){
   // default:
   //   break;
   }
-  settime(1);
+  settime(1u);
 
   // BS->isActive = !debounced;
 
@@ -91,7 +91,7 @@ static void handle_btn(ButtonState *BS){
 static void eisr(ButtonState *BS){
   if(!BS->exti){
     BS->useTick = HAL_GetTick();
-    BS->exti = 1;
+    BS->exti = 1u;
   }
 }
 

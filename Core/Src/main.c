@@ -124,7 +124,7 @@ int main(void)
   led(0);
 
   // Thisoe Timer Init
-  settime(1);
+  settime(1u);
 
 
   /* USER CODE END 2 */
@@ -147,7 +147,7 @@ int main(void)
     // led(r_multi()||r_min());
     // buz(r_multi()||r_sec());
     // countup();
-    // settime(1);
+    // settime(1u);
     // HAL_Delay(500);
     // settime(0);
     // HAL_Delay(500);

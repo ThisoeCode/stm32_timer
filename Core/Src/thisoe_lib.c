@@ -56,6 +56,7 @@ void settime(bool colonstat){
 }
 
 bool countdown(){
+  bool timeNOTup = 1u;
   if(GS.s > 0)
     (GS.s)--;
   else{
@@ -63,10 +64,10 @@ bool countdown(){
       (GS.m)--;
       GS.s = 59;
     }else{ // 00:00
-      return 1;
+      timeNOTup = 0;
     }
   }
-  return 0;
+  return timeNOTup;
 }
 
 void countup(){

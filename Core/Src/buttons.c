@@ -36,7 +36,7 @@ void h_multi(){
   // GF.led ^= 1;
   // led(GF.led);
   // countup();
-  // settime(1);
+  // settime(1u);
 }
 
 static bool h_undone(){

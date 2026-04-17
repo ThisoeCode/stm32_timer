@@ -241,7 +241,7 @@ EXTI (External Interrupt) is an ISR from a GPIO input.
     ```c
     void HAL_GPIO_EXTI_Callback(uint16_t Pin){
       if(pin==BTN_MULTI_Pin){
-        B_MULTI.exti = 1;
+        B_MULTI.exti = 1u;
       }
       // ...
     }
@@ -283,7 +283,7 @@ We can fix this just with a few lines of code.
     static void eisr(ButtonState *BS){
       if(!BS->exti){
         BS->useTick = HAL_GetTick();
-        BS->exti = 1;
+        BS->exti = 1u;
       }
     }
     ```
@@ -303,7 +303,7 @@ We can fix this just with a few lines of code.
           GF.led ^= 1;
           led(GF.led);
           countup();
-          settime(1);
+          settime(1u);
         }
       ```
 
