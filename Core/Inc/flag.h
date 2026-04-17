@@ -5,12 +5,22 @@
 
 
 typedef struct{
+  /** @brief Is D2 led on */
   volatile bool led;
+  /** @brief TIM2 pending */
   volatile bool tim2;
+  /** @brief Is TM1637 "colon" on */
   volatile bool colon;
+  /** @brief Is counting up */
   volatile bool countingUp;
+  /** @brief Was conting up before pause */
+  volatile bool countupMode;
+  /** @brief Is counting down */
   volatile bool countingDown;
+  /** @brief Is timeup alarm ringing */
   volatile bool timeUp;
+  /** @brief Last used timestamp `[min,sec]` */
+  volatile uint8_t pinned[2];
 } Flag;
 
 typedef struct{
@@ -20,9 +30,13 @@ typedef struct{
 } State;
 
 typedef struct{
+  /** @brief 1:MULTI 2:MIN 3:SEC */
   const uint8_t id;
+  /** @brief HAL timestamp for debouncing */
   volatile uint32_t useTick;
+  /** @brief EXTI pending */
   volatile bool exti;
+  /** @todo unused; delete or write brief description */
   volatile bool isActive;
 } ButtonState;
 
@@ -46,6 +60,6 @@ extern ButtonState B_SEC;
 
 
 void bind_state(tm1637_t *seg, uint8_t min, uint8_t sec);
-
+void bind_btn(ButtonState *BS);
 
 #endif

@@ -23,9 +23,9 @@ As a C-lang driven MCU beginner, I think this project is a good starter. <br>
 |-----------|--------|-----------|-------|
 | TM1637    | CLK    | PB6       | Output (bit-bang) |
 | TM1637    | DIO    | PB7       | Output (open-drain) |
-| BTN_MULTI | OUT    | PA1       | Input, pull-down, active LOW |
-| BTN_MIN   | OUT    | PA2       | Input, pull-down, active LOW |
-| BTN_SEC   | OUT    | PA3       | Input, pull-down, active LOW |
+| BTN_MULTI | OUT    | PA1       | `GPIO_EXTI` Rising-edge (`GPIO_Input` when test),<br>pull-down, active LOW |
+| BTN_MIN   | OUT    | PA2       | `GPIO_EXTI` Rising-edge (`GPIO_Input` when test),<br>pull-down, active LOW |
+| BTN_SEC   | OUT    | PA3       | `GPIO_EXTI` Rising-edge (`GPIO_Input` when test),<br>pull-down, active LOW |
 | TMB12A05  | S      | PA8       | Output (active HIGH) |
 
 ### Debugging pins within MCU:
@@ -35,70 +35,63 @@ As a C-lang driven MCU beginner, I think this project is a good starter. <br>
 
 | Component  | STM32 Pin | Notes |
 |------------|-----------|-------|
-| `SYS` auto | PA13      | for debugging |
-| `SYS` auto | PA14      | for debugging |
-| BTN_S2     | PA0       | Input, pull-up, active LOW |
-| LED_D2     | PC13      | Output, no pull |
+| `SYS` auto | `PA13`    | for debugging |
+| `SYS` auto | `PA14`    | for debugging |
+| BTN_S2     | `PA0`     | Input, pull-up, active LOW |
+| LED_D2     | `PC13`    | Output, no pull |
 
 ### Power
 
-| Device | 3V3 | GND |
-|--------|-----|-----|
-| TM1637 | VCC | GND |
-| BTNs   | VCC | GND |
-| TMB12A05 | (mid pin) | - |
-
-### Notes
-
-- Buttons use **internal pull-up** → pressed = LOW
-- TM1637 uses **2-wire proprietary protocol (not I²C)**
+| Device |  3V3  |  GND  |
+|--------|-------|-------|
+| TM1637 | `VCC` | `GND` |
+| BTNs   | `VCC` | `GND` |
+| TMB12A05 | (mid pin) | `-` |
 
 
 
-## Tests
+## Hardware tests
 
 ### Buzzer test
 
 1. Declaration
 
-In `/* USER CODE BEGIN PFP */`:
-
-```c
-void alarm_sound(void);
-```
+    In `/* USER CODE BEGIN PFP */`:
+    ```c
+    void alarm_sound(void);
+    ```
 
 2. Implementation
 
-In `/* USER CODE BEGIN 4 */`:
-
-```c
-void alarm_sound(void)
-{
-  for(int i = 0; i < 4; i++)
-  {
-    HAL_GPIO_WritePin(GPIOA, BUZ_Pin, GPIO_PIN_SET);
-    HAL_GPIO_WritePin(LED_D2_GPIO_Port, LED_D2_Pin, 0);
-    HAL_Delay(70);
-    HAL_GPIO_WritePin(GPIOA, BUZ_Pin, GPIO_PIN_RESET);
-    HAL_GPIO_WritePin(LED_D2_GPIO_Port, LED_D2_Pin, 1);
-    HAL_Delay(70);
-  }
-  HAL_Delay(700);
-}
-```
+    In `/* USER CODE BEGIN 4 */`:
+    ```c
+    void alarm_sound(void)
+    {
+      for(int i = 0; i < 4; i++)
+      {
+        HAL_GPIO_WritePin(GPIOA, BUZ_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(LED_D2_GPIO_Port, LED_D2_Pin, 0);
+        HAL_Delay(70);
+        HAL_GPIO_WritePin(GPIOA, BUZ_Pin, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(LED_D2_GPIO_Port, LED_D2_Pin, 1);
+        HAL_Delay(70);
+      }
+      HAL_Delay(700);
+    }
+    ```
 
 3. Call in main while loop
-```c
-alarm_sound();
-```
+    ```c
+    alarm_sound();
+    ```
 
 
 ### Buttons debugging
 
 I got only 2 buttons but I have a 3-pin switch (that have 2 states: A-B & B-C).
 
-So I have to make `BTN_MIN` and `BTN_SEC` Pull-down,
-so that when floating they won't output as HIGH.
+I had to make `BTN_MIN` and `BTN_SEC` Pull-down,
+so that when floating they won't output any signals.
 
 
 ### Try out a `TM1637` driver lib
@@ -128,7 +121,7 @@ Also prepared a place for flags in future coding of the core logic.
 
 
 
-### Prepare for `__WFI()`
+## Prepare for `__WFI()`
 
 I want a pure interrupt-driven firmware.
 
@@ -219,59 +212,59 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
 
 
-### Button interruption: Setup EXTI
+### Setup EXTI: button interruption
 
 EXTI (External Interrupt) is an ISR from a GPIO input.
 
 1. Re-configure Pins
 
-In `.ioc` > `Pinout & Config` > `Pinout view`,
-set the 3 button's pins as `GPIO_EXTIn`.
+    In `.ioc` > `Pinout & Config` > `Pinout view`,
+    set the 3 button's pins as `GPIO_EXTIn`.
 
-Then go to `Pinout & Config` > `System Core` > `GPIO` and set:
-| Setting | Value |
-| ------- | ----- |
-| GPIO mode | External Interrupt Mode with Rising edge trigger |
-| GPIO Pull | Pull-up |
-| User Label     | `BTN_MULTI_Pin_Pin`/`BTN_MIN_Pin_Pin`/`BTN_SEC_Pin_Pin` |
+    Then go to `Pinout & Config` > `System Core` > `GPIO` and set:
+    | Setting | Value |
+    | ------- | ----- |
+    | GPIO mode | External Interrupt Mode with Rising edge trigger |
+    | GPIO Pull | Pull-up |
+    | User Label     | `BTN_MULTI_Pin_Pin`/`BTN_MIN_Pin_Pin`/`BTN_SEC_Pin_Pin` |
 
 2. Enable NVIC (Nested Vectored Interrupt Controller)
 
-In `Pinout & Config` > `System Core` > `NVIC`,
-check the interrupt of EXTI 1, 2, and 3.
+    In `Pinout & Config` > `System Core` > `NVIC`,
+    check the interrupt of EXTI 1, 2, and 3.
 
-Save `.ioc`.
+    Save `.ioc`.
 
 3. ISR callback function
 
-In `/* USER CODE BEGIN 4 */`:
-```c
-void HAL_GPIO_EXTI_Callback(uint16_t Pin){
-  if(pin==BTN_MULTI_Pin){
-    B_MULTI.exti = 1;
-  }
-  // ...
-}
-```
+    In `/* USER CODE BEGIN 4 */`:
+    ```c
+    void HAL_GPIO_EXTI_Callback(uint16_t Pin){
+      if(pin==BTN_MULTI_Pin){
+        B_MULTI.exti = 1;
+      }
+      // ...
+    }
+    ```
 
-Then in main while loop, make a test that toggles led on button press:
-```c
-// test
-if(B_MULTI.exti){
-  handle();
-}
+    Then in main while loop, make a test that toggles led on button press:
+    ```c
+    // test
+    if(B_MULTI.exti){
+      handle();
+    }
 
-void handle(){
-  // debounce
-  if(HAL_GetTick() - BS->useTick < DEBOUNCE_MS) return;
+    void handle(){
+      // debounce
+      if(HAL_GetTick() - BS->useTick < DEBOUNCE_MS) return;
 
-  BS->exti = 0;
+      BS->exti = 0;
 
-  GF.led ^= 1;
-  led(GF.led);
+      GF.led ^= 1;
+      led(GF.led);
 
-}
-```
+    }
+    ```
 
 
 # Button debouncing
@@ -313,3 +306,5 @@ We can fix this just with a few lines of code.
           settime(1);
         }
       ```
+
+

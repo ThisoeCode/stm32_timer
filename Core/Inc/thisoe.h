@@ -32,9 +32,9 @@ GPIO_PinState r_multi(void);
 GPIO_PinState r_min(void);
 GPIO_PinState r_sec(void);
 
-// void debounce(void);
-// void ondown(void);
-// void onup(void);
+void h_multi(void);
+void h_min(void);
+void h_sec(void);
 
 
 // ======= TM1637 ======= //
@@ -60,5 +60,9 @@ void thisoe_startstop(void);
  * @brief EXTI handler of MIN/SEC btn
  */
 void thisoe_addtime(bool isMin);
+/** 
+ * @brief Memo current timestamp into `Flag.pinned`
+ */
+void memo(void);
 
 #endif

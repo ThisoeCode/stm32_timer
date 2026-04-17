@@ -86,3 +86,8 @@ void countup(){
       GS.m = 0;
   }
 }
+
+void memo(){
+  GF.pinned[0] = GS.m;
+  GF.pinned[1] = GS.s;
+}

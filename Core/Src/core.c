@@ -5,6 +5,7 @@
 
 // ======= TIMER ======= //
 static void timeup(){
+  settime(1);
   GF.countingDown = 0;
   GF.timeUp = 1;
 }
@@ -15,14 +16,14 @@ static void next_tick(){
     if(GF.colon)
       countup();
     GF.colon ^= 1;
-    settime(GF.colon);
+    settime(!GF.colon);
   }
   if(GF.countingDown){
     GF.tim2 = 0;
     if(GF.colon)
       countdown() || (timeup(),0);
     GF.colon ^= 1;
-    settime(GF.colon);
+    settime(!GF.colon);
   }
 }
 
@@ -42,7 +43,7 @@ static GPIO_PinState read_btn(const ButtonState *BS){
 static void handle_btn(ButtonState *BS){
   if(!BS->exti) return;
 
-  // debounce
+  /*** debounce ***/
   if((HAL_GetTick() - BS->useTick) < DEBOUNCE_MS) return;
   BS->exti = 0;
   // bool nowActive = (read_btn(BS) == GPIO_PIN_RESET);
@@ -50,33 +51,34 @@ static void handle_btn(ButtonState *BS){
   // BS->isActive = nowActive;
   // bool debounced = wasActive && !nowActive;
 
-  bool debounced_optmz = (read_btn(BS) == GPIO_PIN_SET);
-  if(debounced_optmz){
-    GF.led ^= 1;
-    led(GF.led);
-    countup();
-    settime(1);
+  bool level = (read_btn(BS) == GPIO_PIN_SET);
+  if(!level) return;
+
+  /*** MAIN HANDLE ***/
+  if(GF.timeUp){
+    GF.timeUp = 0;
+    GS.m = GF.pinned[0];
+    GS.s = GF.pinned[1];
+    return;
   }
+
+  switch(BS->id){
+  case 1u:
+    h_multi();
+    break;
+  case 2u:
+    h_min();
+    break;
+  case 3u:
+    h_sec();
+    break;
+  // default:
+  //   break;
+  }
+  settime(1);
 
   // BS->isActive = !debounced;
 
-
-  // switch(BS.id){
-  // case 1u:
-  //   /* code */
-  //   break;
-
-  // case 2u:
-  //   /* code */
-  //   break;
-
-  // case 3u:
-  //   /* code */
-  //   break;
-    
-  // default:
-  //   break;
-  // }
 }
 
 //static void combo(){

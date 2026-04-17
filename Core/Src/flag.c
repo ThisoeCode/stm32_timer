@@ -17,7 +17,10 @@ void bind_state(tm1637_t *seg, uint8_t min, uint8_t sec){
   GF.colon = 1u;
   GF.countingDown = 0;
   GF.countingUp = 0;
+  GF.countupMode = 0;
   GF.timeUp = 0;
+  GF.pinned[0] = 0;
+  GF.pinned[1] = 0;
 }
 
 void bind_btn(ButtonState *BS){

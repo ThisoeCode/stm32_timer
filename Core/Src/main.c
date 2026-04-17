@@ -118,14 +118,13 @@ int main(void)
   tm1637_brightness(TM,7);
   tm1637_str(TM," HI ");
   HAL_Delay(2333);
-  tm1637_str(TM,"    ");
-  HAL_Delay(99);
+  tm1637_str(TM,"    "); // SCREEN OFF
+  HAL_Delay(777);
 
   led(0);
 
-  // BTNs init
-
-//  TODO
+  // Thisoe Timer Init
+  settime(1);
 
 
   /* USER CODE END 2 */
