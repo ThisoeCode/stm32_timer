@@ -51,15 +51,16 @@ extern Flag GF;
  */
 extern State GS;
 
-/**
- * @brief Global State
- */
 extern ButtonState B_MULTI;
 extern ButtonState B_MIN;
 extern ButtonState B_SEC;
 
-
 void bind_state(tm1637_t *seg, uint8_t min, uint8_t sec);
 void bind_btn(ButtonState *BS);
+
+/**
+ * @brief Read GPIO pin (HAL)
+ */
+GPIO_PinState read_btn(ButtonState *BS);
 
 #endif

@@ -31,15 +31,6 @@ static void next_tick(){
 
 // ======= BUTTONS ======= //
 
-static GPIO_PinState read_btn(const ButtonState *BS){
-  switch (BS->id){
-    case 1u: return HAL_GPIO_ReadPin(BTN_MULTI_GPIO_Port, BTN_MULTI_Pin);
-    case 2u: return HAL_GPIO_ReadPin(BTN_MIN_GPIO_Port,   BTN_MIN_Pin);
-    case 3u: return HAL_GPIO_ReadPin(BTN_SEC_GPIO_Port,   BTN_SEC_Pin);
-    default: return GPIO_PIN_SET; // safe default
-  }
-}
-
 static void handle_btn(ButtonState *BS){
   if(!BS->exti) return;
 
@@ -55,13 +46,20 @@ static void handle_btn(ButtonState *BS){
   BS->exti = 0;
 
   /*** MAIN HANDLE ***/
+  // 1. Timeup confirmation
   if(GF.timeUp){
     GF.timeUp = 0;
     GS.m = GF.pinned[0];
     GS.s = GF.pinned[1];
+    settime(1u);
     return;
   }
-
+  // 2. Handle combo
+  if(h_combo(BS->id)){
+    reset();
+    return;
+  }
+  // 3. Others
   switch(BS->id){
   case 1u:
     h_multi();

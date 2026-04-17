@@ -88,7 +88,35 @@ void countup(){
   }
 }
 
+
+
+// ======= BUTTONS ======= //
+
 void memo(){
   GF.pinned[0] = GS.m;
   GF.pinned[1] = GS.s;
+}
+
+GPIO_PinState read_btn(ButtonState *BS){
+  switch (BS->id){
+    case 1u: return HAL_GPIO_ReadPin(BTN_MULTI_GPIO_Port, BTN_MULTI_Pin);
+    case 2u: return HAL_GPIO_ReadPin(BTN_MIN_GPIO_Port,   BTN_MIN_Pin);
+    case 3u: return HAL_GPIO_ReadPin(BTN_SEC_GPIO_Port,   BTN_SEC_Pin);
+    default: return GPIO_PIN_SET;
+  }
+}
+
+void reset(){
+  GS.m = 0;
+  GS.s = 0;
+  GF.pinned[0] = 0;
+  GF.pinned[1] = 0;
+  settime(1u);
+  // reset flags
+  GF.led = 0;
+  GF.colon = 1u;
+  GF.countingDown = 0;
+  GF.countingUp = 0;
+  GF.countupMode = 0;
+  GF.timeUp = 0;
 }

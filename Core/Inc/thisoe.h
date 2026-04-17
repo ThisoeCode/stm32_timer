@@ -35,6 +35,7 @@ GPIO_PinState r_sec(void);
 void h_multi(void);
 void h_min(void);
 void h_sec(void);
+bool h_combo(uint8_t id);
 
 
 // ======= TM1637 ======= //
@@ -64,5 +65,10 @@ void thisoe_addtime(bool isMin);
  * @brief Memo current timestamp into `Flag.pinned`
  */
 void memo(void);
+/** 
+ * @brief Reset timer timestamps and states
+ */
+void reset(void);
+
 
 #endif

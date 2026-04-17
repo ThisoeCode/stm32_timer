@@ -267,7 +267,7 @@ EXTI (External Interrupt) is an ISR from a GPIO input.
     ```
 
 
-# Button debouncing
+## Button debouncing
 
 Buttons, physically, are often 2 pieces of thin metal touching.
 The pressing of the button usually creates one or several bounces of those metals under few milliseconds,
@@ -298,8 +298,8 @@ We can fix this just with a few lines of code.
       ```
     - When button still pressed after 39 ms, proceed working the button ought to.
       ```c
-        bool debounced_optmz = (read_btn(BS) == GPIO_PIN_SET);
-        if(debounced_optmz){
+        bool level = (read_btn(BS) == GPIO_PIN_SET);
+        if(level){
           GF.led ^= 1;
           led(GF.led);
           countup();
@@ -307,4 +307,15 @@ We can fix this just with a few lines of code.
         }
       ```
 
+> Later version took core logic codes out from the `if` block,
+> also the pending flag resets afterwards.
+> ```c
+> if(!level) return;
+> BS->exti = 0;
+> // main logic...
+> ```
 
+*******
+
+> Pure software, the timer core logics,
+> were implemented soon afterwards.

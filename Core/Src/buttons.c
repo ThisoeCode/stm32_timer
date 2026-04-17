@@ -19,6 +19,20 @@ GPIO_PinState r_sec(void){
 
 // ======= HANDLE BUTTON ======= //
 
+bool h_combo(uint8_t id){
+  if(id==1u){
+    if(
+      read_btn(&B_MIN) == GPIO_PIN_SET ||
+      read_btn(&B_SEC) == GPIO_PIN_SET
+    ) return 1u;
+  }
+  if(id==2u || id==3u){
+    if(read_btn(&B_MULTI) == GPIO_PIN_SET)
+      return 1u;
+  }
+  return 0;
+}
+
 void h_multi(){
   if(GF.countingDown)
     GF.countingDown = 0;
