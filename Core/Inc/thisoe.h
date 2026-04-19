@@ -17,6 +17,7 @@
 #define DEBOUNCE_MS 39U
 #define ONPRESS_BEEP_PULSE_MS 63U
 #define ALARM_TONE_STEP_MS 70U
+#define LONGPRESS_MS 900U
 
 
 // ======= MCU ======= //
@@ -26,19 +27,24 @@ void led(bool);
 
 // ======= BUZZER ======= //
 void buz(bool);
-void onpress_beep_update(void);
+void beep(void);
+void beep_update(void);
 void alarm_sound(void);
 
 
 // ======= GPIO_INPUT BUTTONS TEST (unusable for EXTI buttons) ======= //
-GPIO_PinState r_multi(void);
-GPIO_PinState r_min(void);
-GPIO_PinState r_sec(void);
+// GPIO_PinState r_multi(void);
+// GPIO_PinState r_min(void);
+// GPIO_PinState r_sec(void);
 
+
+// ======= EXTI BUTTONS ======= //
 void h_multi(void);
 void h_min(void);
 void h_sec(void);
 bool h_combo(uint8_t id);
+
+void longpress(void);
 
 
 // ======= TM1637 ======= //

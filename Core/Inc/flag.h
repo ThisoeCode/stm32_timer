@@ -25,6 +25,8 @@ typedef struct{
   volatile uint8_t pinned[2];
   /** @brief Ending timestamp of beeping on button press */
   volatile uint32_t beepOffTick;
+  /** @brief Is longpress enabled */
+  volatile bool longpress;
 } Flag;
 
 typedef struct{
@@ -36,12 +38,10 @@ typedef struct{
 typedef struct{
   /** @brief 1:MULTI 2:MIN 3:SEC */
   const uint8_t id;
-  /** @brief HAL timestamp for debouncing */
+  /** @brief HAL timestamp at rise */
   volatile uint32_t useTick;
   /** @brief EXTI pending */
   volatile bool exti;
-  /** @todo unused; delete or write brief description (RESERVED for longpress logic) */
-  volatile bool isActive;
 } ButtonState;
 
 

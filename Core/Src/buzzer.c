@@ -11,8 +11,13 @@ void buz(bool stat){
 }
 
 
-void onpress_beep_update(){
-  if(!GF.beepOffTick) return;
+void beep(){
+  buz(1u);
+  GF.beepOffTick = HAL_GetTick() + ONPRESS_BEEP_PULSE_MS;
+}
+
+
+void beep_update(){
   if((int32_t)(HAL_GetTick() - GF.beepOffTick) >= 0){
     buz(0);
     GF.beepOffTick = 0;
@@ -21,8 +26,6 @@ void onpress_beep_update(){
 
 
 void alarm_sound(){
-  if(!GF.timeUp) return;
-
   uint32_t cycle[2] = {
     ALARM_TONE_STEP_MS * 7u, // BEEP BEEP phase
     ALARM_TONE_STEP_MS * 14u, // total cycle

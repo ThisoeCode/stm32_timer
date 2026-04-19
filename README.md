@@ -1,6 +1,10 @@
 # Thisoe Timer
 
-As a C embedded beginner, this project might be a good starter. <br>
+As a C embedded beginner, this project might be a good starter.
+
+You can try build one following my [log](#building-log).
+
+
 
 ## Functionalities
 
@@ -12,10 +16,12 @@ As a C embedded beginner, this project might be a good starter. <br>
 
 ### Particular details
 - Says `Hi` on boot;
+- Debounce buttons with software only;
 - Beep on any button press;
 - Add 1 minute (1 second) on press;
 - Reset time to `00:00` and clear up flags and states when combo of start/stop button and one of the timer button pressed at the same time;
 - Go back to `00:00` when countup overflow;
+- Blink the colon symbol on the display when counting;
 - Longpress to add time quickly (NOT YET IMPLEMENTED).
 
 
@@ -243,7 +249,7 @@ EXTI (External Interrupt) is an ISR from a GPIO input.
     | ------- | ----- |
     | GPIO mode | External Interrupt Mode with Rising edge trigger |
     | GPIO Pull | Pull-up |
-    | User Label     | `BTN_MULTI_Pin_Pin`/`BTN_MIN_Pin_Pin`/`BTN_SEC_Pin_Pin` |
+    | User Label     | `BTN_MULTI_Pin`/`BTN_MIN_Pin`/`BTN_SEC_Pin` |
 
 2. Enable NVIC (Nested Vectored Interrupt Controller)
 
@@ -339,13 +345,25 @@ We can fix this just with a few lines of code.
 > Pure software, the timer core logics,
 > were implemented afterwards.
 
-### Time up buzzer ringtone
-Used internal HAL tick to make a 70 ms per step tone.
+### Buzzer codes
+Made beep sound on any button press.
+See [`onpress_beep_update()`](Core/Src/buzzer.c#L14).
 
-See new `alarm_sound()`.
+Also made the classic time up alarm tone using HAL software timestamp.
+See the [new version of `alarm_sound()`](Core/Src/buzzer.c#L23) in the current codebase instead of the one showing in README.
 
 > Final tests and minor fixes occurred before repo archiving.
 
+
+
+## Updates after release
+### Longpress
+I totally forgot to code longpress before v1.0 release ㅠ ㅠ
+
+Existing `ButtonState->useTick` was used to trigger.
+See [`longpress()`](Core/Src/buttons.c#L84).
+
+Also optimized `BS->exti` resetting in debouncing logic.
 
 
 # Afterword
@@ -355,11 +373,11 @@ See new `alarm_sound()`.
 Oh hi! This is Thisoe based in Korea.
 
 As of 2026,
-I experienced a year (2022) coding ESP8266 using MicroPython when I was in college,
+I experienced a year (in 2021) coding ESP8266 using MicroPython when I was in college,
 and another 3+ years of JavaScript (1+ year of TypeScript) web developing as hobby.
 
 I gained enough coding experience.
-I also curious and want to learn more about lower-level languages and hardware basics.
+I also curious and eager to learn more about lower-level languages and hardware basics.
 So I started this new journey of C embedded with teacher
 [OJ Tube](https://www.youtube.com/channel/UCIRh1Bvv_CigcP80H0ZCBUA) aka 오지완 선생님.
 
@@ -377,8 +395,10 @@ During those days, I also learned minimal hardware knowledges and basics on how 
 
 Random playing Mix Playlist of instrumentals of [Suisei](https://www.youtube.com/channel/UC5CwaMl1eIgY8h02uZw7u8A)'s songs. They buff my productivity incredibly. Btw the song «[BEEP BEEP](https://www.youtube.com/watch?v=Hew0tgd9Ipg&list=OLAK5uy_n0BiXXhYZ2z2yZZftyEzxr_SYnb8CFJtE&index=1)» released when I was coding buzzer functions. Looped the album while coding.
 
+> Didn't notice my markdown syntax has got THIS natural and as good as fellow AIs lmao ㄷㄷㄷ エグい
+
 ## Contact
 
-Since I probably won't come back and touch this repo ever again, I'm just gonna archive it... or maybe after adding Korean, Chinese, and Japanese README later.
+Since I probably won't come back and touch this repo ever again, I'm just gonna archive it... or maybe after adding Korean, Mandarin, and Japanese README later.
 
 Contact me at **thisoecode@gmail.com**, or [DM me on 𝕏](https://x.com/ThisoeCode) for a chit chat :D

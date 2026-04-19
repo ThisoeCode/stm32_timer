@@ -40,21 +40,11 @@ static void handle_btn(ButtonState *BS){
 
   /*** debounce ***/
   if((HAL_GetTick() - BS->useTick) < DEBOUNCE_MS) return;
-  // TODO: Longpress logic
-  // bool nowActive = (read_btn(BS) == GPIO_PIN_RESET);
-  // bool wasActive = BS->isActive;
-  // BS->isActive = nowActive;
-  // bool debounced = wasActive && !nowActive;
-
-  bool level = (read_btn(BS) == GPIO_PIN_SET);
-  if(!level) return;
   BS->exti = 0;
+  if(read_btn(BS) != GPIO_PIN_SET) return;
 
   /*** MAIN HANDLE ***/
-  // 0. Beep
-  buz(1u);
-  GF.beepOffTick = HAL_GetTick() + ONPRESS_BEEP_PULSE_MS;
-
+  beep();
   // 1. Timeup confirmation
   if(GF.timeUp){
     GF.timeUp = 0;
@@ -69,24 +59,21 @@ static void handle_btn(ButtonState *BS){
     reset();
     return;
   }
-  // 3. Others
+  // 3. Functionality
   switch(BS->id){
   case 1u:
     h_multi();
     break;
   case 2u:
     h_min();
+    GF.longpress = 1u;
     break;
   case 3u:
     h_sec();
+    GF.longpress = 1u;
     break;
-  // default:
-  //   break;
   }
   settime(1u);
-
-  // BS->isActive = !debounced;
-
 }
 
 
@@ -104,13 +91,12 @@ static void eisr(ButtonState *BS){
 
 // ======= MAIN ======= //
 
-/** 
- * @brief main while loop
- */
+// main while loop
 void thisoe_timer(){
   // software ticks
-  onpress_beep_update();
-  alarm_sound();
+  if(GF.beepOffTick) beep_update();
+  if(GF.timeUp) alarm_sound();
+  if(GF.longpress) longpress();
 
   // TIM
   if(GF.tim2) next_tick();

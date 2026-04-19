@@ -123,4 +123,5 @@ void reset(){
   GF.countingUp = 0;
   GF.countupMode = 0;
   GF.timeUp = 0;
+  GF.longpress = 0;
 }

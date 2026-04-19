@@ -23,10 +23,10 @@ void bind_state(tm1637_t *seg, uint8_t min, uint8_t sec){
   GF.pinned[0] = 0;
   GF.pinned[1] = 0;
   GF.beepOffTick = 0;
+  GF.longpress = 0;
 }
 
 void bind_btn(ButtonState *BS){
   BS->exti = 0;
   BS->useTick = 0;
-  BS->isActive = 0;
 }
