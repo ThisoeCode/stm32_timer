@@ -1,9 +1,26 @@
 # Thisoe Timer
 
-As a C-lang driven MCU beginner, I think this project is a good starter. <br>
+As a C embedded beginner, this project might be a good starter. <br>
+
+## Functionalities
+
+### Main features
+- Countdown, and alarm when time is up;
+- Start counting up if is set to `00:00`;
+- Pause and continue countdown/up freely;
+- Remembers last time set.
+
+### Particular details
+- Says `Hi` on boot;
+- Beep on any button press;
+- Add 1 minute (1 second) on press;
+- Reset time to `00:00` and clear up flags and states when combo of start/stop button and one of the timer button pressed at the same time;
+- Go back to `00:00` when countup overflow;
+- Longpress to add time quickly (NOT YET IMPLEMENTED).
 
 
 
+# Building log
 
 ## Hardware Preparation
 - An `STM32F103C8T6`
@@ -317,5 +334,51 @@ We can fix this just with a few lines of code.
 
 *******
 
+## Others
+
 > Pure software, the timer core logics,
-> were implemented soon afterwards.
+> were implemented afterwards.
+
+### Time up buzzer ringtone
+Used internal HAL tick to make a 70 ms per step tone.
+
+See new `alarm_sound()`.
+
+> Final tests and minor fixes occurred before repo archiving.
+
+
+
+# Afterword
+
+### Before this project
+
+Oh hi! This is Thisoe based in Korea.
+
+As of 2026,
+I experienced a year (2022) coding ESP8266 using MicroPython when I was in college,
+and another 3+ years of JavaScript (1+ year of TypeScript) web developing as hobby.
+
+I gained enough coding experience.
+I also curious and want to learn more about lower-level languages and hardware basics.
+So I started this new journey of C embedded with teacher
+[OJ Tube](https://www.youtube.com/channel/UCIRh1Bvv_CigcP80H0ZCBUA) aka 오지완 선생님.
+
+Mr. OJ's teaching style was basic enough that middle school students could understand lol
+and I'm a bit tired following with his tutorial,
+so I turned to start a project right away.
+
+Holding the freshly purchased STM32 board, I saw my cute little timer sticking on the fridge, and thereupon pulled out my old TM1637 (the time displayer) and TMB12A05 (the buzzer) out of the ESP8266 box.
+
+### During coding
+
+I'm attending full-time job, so I coded 1 ~ 3 hrs per day, from the 5th to 19th of April 2026.
+
+During those days, I also learned minimal hardware knowledges and basics on how to wire things up from [Ben Eater](https://www.youtube.com/beneater)'s early vods.
+
+Random playing Mix Playlist of instrumentals of [Suisei](https://www.youtube.com/channel/UC5CwaMl1eIgY8h02uZw7u8A)'s songs. They buff my productivity incredibly. Btw the song «[BEEP BEEP](https://www.youtube.com/watch?v=Hew0tgd9Ipg&list=OLAK5uy_n0BiXXhYZ2z2yZZftyEzxr_SYnb8CFJtE&index=1)» released when I was coding buzzer functions. Looped the album while coding.
+
+## Contact
+
+Since I probably won't come back and touch this repo ever again, I'm just gonna archive it... or maybe after adding Korean, Chinese, and Japanese README later.
+
+Contact me at **thisoecode@gmail.com**, or [DM me on 𝕏](https://x.com/ThisoeCode) for a chit chat :D

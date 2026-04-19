@@ -7,6 +7,7 @@
 static void timeup(){
   settime(1u);
   GF.countingDown = 0;
+  GF.timeupTick = 0;
   GF.timeUp = 1u;
 }
 
@@ -25,6 +26,9 @@ static void next_tick(){
     GF.colon ^= 1;
     settime(!GF.colon);
   }
+  if(GF.timeUp){
+
+  }
 }
 
 
@@ -36,6 +40,7 @@ static void handle_btn(ButtonState *BS){
 
   /*** debounce ***/
   if((HAL_GetTick() - BS->useTick) < DEBOUNCE_MS) return;
+  // TODO: Longpress logic
   // bool nowActive = (read_btn(BS) == GPIO_PIN_RESET);
   // bool wasActive = BS->isActive;
   // BS->isActive = nowActive;
@@ -46,12 +51,17 @@ static void handle_btn(ButtonState *BS){
   BS->exti = 0;
 
   /*** MAIN HANDLE ***/
+  // 0. Beep
+  buz(1u);
+  GF.beepOffTick = HAL_GetTick() + ONPRESS_BEEP_PULSE_MS;
+
   // 1. Timeup confirmation
   if(GF.timeUp){
     GF.timeUp = 0;
     GS.m = GF.pinned[0];
     GS.s = GF.pinned[1];
     settime(1u);
+    led(0);
     return;
   }
   // 2. Handle combo
@@ -79,9 +89,6 @@ static void handle_btn(ButtonState *BS){
 
 }
 
-//static void combo(){
-  // TODO
-//}
 
 /**
  * @brief External Interrupt Service Routine
@@ -101,6 +108,10 @@ static void eisr(ButtonState *BS){
  * @brief main while loop
  */
 void thisoe_timer(){
+  // software ticks
+  onpress_beep_update();
+  alarm_sound();
+
   // TIM
   if(GF.tim2) next_tick();
 

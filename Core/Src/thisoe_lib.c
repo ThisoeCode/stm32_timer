@@ -10,7 +10,11 @@ void delay(uint32_t ms){
 }
 
 void led(bool stat){
-  HAL_GPIO_WritePin(LED_D2_GPIO_Port, LED_D2_Pin, !stat);
+  HAL_GPIO_WritePin(
+    LED_D2_GPIO_Port,
+    LED_D2_Pin,
+    stat ? GPIO_PIN_RESET : GPIO_PIN_SET
+  );
 }
 
 

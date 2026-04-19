@@ -13,7 +13,10 @@
 #define Bmin BTN_MIN_Pin
 #define Bsec BTN_SEC_Pin
 
+// config
 #define DEBOUNCE_MS 39U
+#define ONPRESS_BEEP_PULSE_MS 63U
+#define ALARM_TONE_STEP_MS 70U
 
 
 // ======= MCU ======= //
@@ -23,7 +26,7 @@ void led(bool);
 
 // ======= BUZZER ======= //
 void buz(bool);
-
+void onpress_beep_update(void);
 void alarm_sound(void);
 
 
