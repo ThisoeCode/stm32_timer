@@ -4,14 +4,16 @@ As a C embedded beginner, this project might be a good starter.
 
 You can try build one following my [log](#building-log).
 
+I also noted some [background story](#afterword) of mine!
+
 
 
 ## Functionalities
 
 ### Main features
-- Countdown, and alarm when time is up;
+- Countdown, alarm when time is up;
 - Start counting up if is set to `00:00`;
-- Pause and continue countdown/up freely;
+- Pause and continue freely;
 - Remembers last time set.
 
 ### Particular details
@@ -19,10 +21,10 @@ You can try build one following my [log](#building-log).
 - Debounce buttons with software only;
 - Beep on any button press;
 - Add 1 minute (1 second) on press;
-- Reset time to `00:00` and clear up flags and states when combo of start/stop button and one of the timer button pressed at the same time;
-- Go back to `00:00` when countup overflow;
+- Reset time to `00:00` and clear up flags and states when combo of start/stop button and one of the time-setting buttons pressed at the same time;
+- Loop back to `00:00` when countup overflow;
 - Blink the colon symbol on the display when counting;
-- Longpress to add time quickly (NOT YET IMPLEMENTED).
+- Longpress to add time quickly.
 
 
 
